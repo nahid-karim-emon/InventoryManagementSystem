@@ -48,6 +48,8 @@ namespace IMS.Api.Controllers
                     continue;
                 }
                 var stock = await stockReceivedProductService.GetGoodProductCountByWarehouseAndProduct(warehouse.id, product.id);
+                var sell = await sellerOrderItemService.GetTotalProductSalesByWarehouse(warehouse.id, product.id);
+                stock -= sell;
                 if (stock < item.Quantity)
                 {
                     return BadRequest("Out of stock!");
