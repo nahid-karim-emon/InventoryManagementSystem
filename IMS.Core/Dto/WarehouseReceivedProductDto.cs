@@ -9,6 +9,6 @@ namespace IMS.Core.Dto
     public class WarehouseReceivedProductDto
     {
         public int warehouse_stock_id {  get; set; }
-        public List<WarehouseReceivedProductItemDto> warehouse_products { get; set; } = new();
+        public List<WarehouseReceivedProductItemsDto> warehouse_products { get; set; } = new();
     }
 }

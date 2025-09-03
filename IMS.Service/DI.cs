@@ -13,11 +13,6 @@ using IMS.Service.Services.SupplierService;
 using IMS.Service.Services.WareHouseService;
 using IMS.Service.Services.WareHouseStockService;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IMS.Service
 {

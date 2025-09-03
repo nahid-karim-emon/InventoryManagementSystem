@@ -1,4 +1,5 @@
-﻿using IMS.Core.Entities;
+﻿using IMS.Core.Dto;
+using IMS.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace IMS.Service.Services.StockReceivedProductService
 {
     public interface IStockReceivedProductService
     {
-        Task<IEnumerable<WarehouseReceivedProduct>> GetProducts(int id);
+        Task<IEnumerable<WarehouseProductSummaryDto>> GetProducts(IEnumerable<int> stockIds);
         Task<int> GetGoodProductCountByWarehouseAndProduct(int warehouseId, int productId);
     }
 }

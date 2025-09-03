@@ -61,13 +61,9 @@ namespace IMS.Api.Controllers
                 return NotFound();
             }
             List<WareHouseStockInfo> stockInfos = new List<WareHouseStockInfo>();
-            foreach (var item in stock)
-            {
-                var recPro = await stockReceivedProductService.GetProducts(item.id);
-                var purchage = await purchageOrderService.getPurchageOrderById(item.purchage_order_id);
-                var supplier = await supplierService.getSupplierById(purchage.supplier_id);
+            var stockIds = stock.Select(s => s.id).ToList();
+                var recPro = await stockReceivedProductService.GetProducts(stockIds);
                 var obj = new WareHouseStockInfo();
-                obj.SupplierName = supplier.name;
                 List<WarehouseReceivedProductItemDto> products = new();
                 foreach(var pro in recPro)
                 {
@@ -76,15 +72,14 @@ namespace IMS.Api.Controllers
                     var obj1 = new WarehouseReceivedProductItemDto()
                     {
                         product = product.name,
-                        good_product = pro.good_product,
-                        damaged_product = pro.damaged_product,
-                        currentInStock = pro.good_product - totalSell
+                        good_product = pro.total_good_product,
+                        damaged_product = pro.total_damaged_product,
+                        currentInStock = pro.total_good_product - totalSell
                     };
                     products.Add(obj1);
                 }
                 obj.Products = products;
                 stockInfos.Add(obj);
-            }
             var response = new WareHouseDetailsDto()
             {
                 WareHouse = ware.name,

@@ -14,6 +14,6 @@ namespace IMS.Core.Dto
         [Required]
         public string warehouse_name { get; set; }
         [Required]
-        public List<ProductOrderItemDto> Products { get; set; }
+        public List<ProductOrderItemsDto> Products { get; set; }
     }
 }

@@ -50,9 +50,27 @@ namespace IMS.Api.Controllers
                 var stock = await stockReceivedProductService.GetGoodProductCountByWarehouseAndProduct(warehouse.id, product.id);
                 var sell = await sellerOrderItemService.GetTotalProductSalesByWarehouse(warehouse.id, product.id);
                 stock -= sell;
-                if (stock < item.Quantity)
+                if(stock == 0)
                 {
-                    return BadRequest("Out of stock!");
+                    var it2 = new ProductOrderItemDto()
+                    {
+                        ProductName = item.ProductName,
+                        Quantity = 0,
+                        Message = "Out Of Stock!"
+                    };
+                    items.Add(it2);
+                    continue;
+                }
+                else if (stock < item.Quantity)
+                {
+                    var it1 = new ProductOrderItemDto()
+                    {
+                        ProductName = item.ProductName,
+                        Quantity = 0,
+                        Message = "Insufficient Product!"
+                    };
+                    items.Add(it1);
+                    continue;
                 }
                 var order = new SellerOrderItem()
                 {
@@ -60,8 +78,13 @@ namespace IMS.Api.Controllers
                     product_id = product.id,
                     quantity = item.Quantity,
                 };
-
-                items.Add(item);
+                var it = new ProductOrderItemDto()
+                {
+                    ProductName = item.ProductName,
+                    Quantity = item.Quantity,
+                    Message = "Available"
+                };
+                items.Add(it);
                 await sellerOrderItemService.addSellerOrderItem(order);
                 totalItem += item.Quantity;
                 totalCost += item.Quantity * product.unit_cost;
