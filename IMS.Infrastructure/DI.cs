@@ -1,4 +1,5 @@
-﻿using IMS.Core.CoreInterface;
+﻿using IMS.Core.Caching;
+using IMS.Core.CoreInterface;
 using IMS.Infrastructure.Core;
 using IMS.Infrastructure.Data;
 using IMS.Infrastructure.Repositories.BrandRepository;
@@ -37,7 +38,12 @@ namespace IMS.Infrastructure
             services.AddSingleton<IReadDbConnectionFactory>(
                 sp => new DbConnectionFactory(readConnectionString));
             services.AddSingleton<IWriteDbConnectionFactory>(
-                sp => new DbConnectionFactory(writeConnectionString));
+                sp => new DbConnectionFactory(writeConnectionString)); 
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = configuration.GetConnectionString("Redis");
+                options.InstanceName = "IMS_";
+            });
             services.AddScoped<IUnitOfWorks, UnitOfWorks>();
             services.AddScoped<IProductCategoryReadRepository, ProductCategoryReadRepository>();
             services.AddScoped<IProductCategoryWriteRepository, ProductCategoryWriteRepository>();
@@ -65,6 +71,7 @@ namespace IMS.Infrastructure
             services.AddScoped<IWarehouseReceivedProductWriteRepository, WarehouseReceivedProductWriteRepository>();
             services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
             services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
+            services.AddScoped<IRedisCacheService, RedisCacheService>();
             return services;
         }
 
