@@ -37,6 +37,10 @@ namespace IMS.Infrastructure.Core
             {
                 options.AbsoluteExpirationRelativeToNow = expiry;
             }
+            else
+            {
+                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
+            }
 
             var jsonData = JsonSerializer.Serialize(value);
             await _cache.SetStringAsync(key, jsonData, options);
