@@ -24,7 +24,46 @@ namespace IMS.Infrastructure.Core
 
             return JsonSerializer.Deserialize<T>(jsonData);
         }
-         
+
+        public async Task<T?> HashGetAllAsync<T>(string key)
+        {
+            return await GetAsync<T>(key);
+        }
+
+        public async Task HashSetAsync<T>(string key, string productId, T value, TimeSpan? expire = null)
+        {
+            var jsonData = await _cache.GetStringAsync(key);
+            Dictionary<string, T>? items = null;
+
+            if (jsonData is not null)
+            {
+                items = JsonSerializer.Deserialize<Dictionary<string, T>>(jsonData);
+            }
+
+            items ??= new Dictionary<string, T>();
+
+            items[productId] = value;
+
+            await SetAsync(key, items, expire);
+        }
+
+        public async Task RemoveItemAsync(string key, string productId)
+        {
+            var jsonData = await _cache.GetStringAsync(key);
+
+            if (jsonData is null)
+            {
+                return;
+            }
+
+            var items = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonData);
+
+            if (items is not null && items.Remove(productId))
+            {
+                await SetAsync(key, items);
+            }
+        }
+
         public async Task RemoveAsync(string key)
         {
             await _cache.RemoveAsync(key);
